@@ -60,4 +60,8 @@ public class Booking {
         this.bookingDates = bookingDates;
     }
 
+    public void addBookingDate(BookingDate bookingDate) {
+        bookingDates.add(bookingDate);
+        bookingDate.setBooking(this);
+    }
 }

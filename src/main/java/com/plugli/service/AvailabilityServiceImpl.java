@@ -1,5 +1,6 @@
 package com.plugli.service;
 
+import com.plugli.model.BookingDate;
 import com.plugli.repository.BookingDateRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +23,10 @@ public class AvailabilityServiceImpl implements AvailabilityService {
                 .filter(day -> !bookingDateRepository.existsByDate(day))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean isAvailable(List<BookingDate> dates) {
+        return dates.stream().noneMatch(date -> bookingDateRepository.existsByDate(date.getDate()));
+    }
+
 }

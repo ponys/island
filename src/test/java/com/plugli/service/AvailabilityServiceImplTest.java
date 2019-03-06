@@ -1,5 +1,6 @@
 package com.plugli.service;
 
+import com.plugli.model.BookingDate;
 import com.plugli.repository.BookingDateRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.empty;
@@ -45,6 +47,29 @@ public class AvailabilityServiceImplTest {
 
         List<LocalDate> rList = availabilityService.getAvailability(start, endDate);
         assertThat(rList, is(empty()));
+    }
+
+    @Test
+    public void testIsNotAvailable() {
+        given(bookingDateRepository.existsByDate(LocalDate.now().plusDays(1))).willReturn(false);
+        given(bookingDateRepository.existsByDate(LocalDate.now().plusDays(2))).willReturn(true);
+        List<BookingDate> days = new ArrayList<>();
+        days.add(new BookingDate(LocalDate.now().plusDays(1)));
+        days.add(new BookingDate(LocalDate.now().plusDays(2)));
+        boolean rAvailability = availabilityService.isAvailable(days);
+        assertThat(rAvailability, is(false));
+    }
+
+
+    @Test
+    public void testIsAvailable() {
+        given(bookingDateRepository.existsByDate(LocalDate.now().plusDays(1))).willReturn(false);
+        given(bookingDateRepository.existsByDate(LocalDate.now().plusDays(2))).willReturn(false);
+        List<BookingDate> days = new ArrayList<>();
+        days.add(new BookingDate(LocalDate.now().plusDays(1)));
+        days.add(new BookingDate(LocalDate.now().plusDays(2)));
+        boolean rAvailability = availabilityService.isAvailable(days);
+        assertThat(rAvailability, is(true));
     }
 
 }
