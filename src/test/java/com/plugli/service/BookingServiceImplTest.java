@@ -3,6 +3,7 @@ package com.plugli.service;
 import com.plugli.TestUtils;
 import com.plugli.model.Booking;
 import com.plugli.repository.BookingRepository;
+import com.plugli.service.exception.BookingNotFoundException;
 import com.plugli.service.exception.InvalidBookingLengthException;
 import com.plugli.service.exception.InvalidBookingRangeException;
 import com.plugli.service.exception.UnavailableDatesException;
@@ -87,5 +88,37 @@ public class BookingServiceImplTest {
         Booking booking = TestUtils.createBooking(tomorrow());
         given(availabilityService.isAvailable(booking.getBookingDates())).willReturn(false);
         bookingService.create(booking);
+    }
+
+    @Test
+    public void testUpdateBooking() throws UnavailableDatesException, BookingNotFoundException {
+        Booking booking = TestUtils.createBooking(tomorrow());
+        booking.setId(1L);
+        given(availabilityService.isAvailableExcludingBooking(booking)).willReturn(true);
+        given(bookingRepository.existsById(1L)).willReturn(true);
+        given(bookingRepository.save(booking)).willReturn(booking);
+        Booking rBooking = bookingService.updateBooking(booking);
+
+        assertThat(rBooking, is(booking));
+    }
+
+    @Test(expected = BookingNotFoundException.class)
+    public void testUpdateNonExistingBooking() throws UnavailableDatesException, BookingNotFoundException {
+        Booking booking = TestUtils.createBooking(tomorrow());
+        booking.setId(1L);
+        given(bookingRepository.existsById(1L)).willReturn(false);
+        bookingService.updateBooking(booking);
+    }
+
+    @Test
+    public void testDeleteExistingBooking() throws BookingNotFoundException {
+        given(bookingRepository.existsById(1L)).willReturn(true);
+        bookingService.deleteBooking(1L);
+    }
+
+    @Test(expected = BookingNotFoundException.class)
+    public void testDeleteNonExistingBooking() throws BookingNotFoundException {
+        given(bookingRepository.existsById(1L)).willReturn(false);
+        bookingService.deleteBooking(1L);
     }
 }

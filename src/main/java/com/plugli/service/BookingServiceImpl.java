@@ -3,6 +3,7 @@ package com.plugli.service;
 import com.plugli.model.Booking;
 import com.plugli.model.BookingDate;
 import com.plugli.repository.BookingRepository;
+import com.plugli.service.exception.BookingNotFoundException;
 import com.plugli.service.exception.InvalidBookingLengthException;
 import com.plugli.service.exception.InvalidBookingRangeException;
 import com.plugli.service.exception.UnavailableDatesException;
@@ -43,6 +44,36 @@ public class BookingServiceImpl implements BookingService {
             }
         } else {
             throw new UnavailableDatesException();
+        }
+    }
+
+    @Override
+    public Booking updateBooking(Booking booking) throws BookingNotFoundException, UnavailableDatesException {
+        validateBooking(booking);
+        validateUpdate(booking);
+        if (availabilityService.isAvailableExcludingBooking(booking)) {
+            try {
+                return bookingRepository.save(booking);
+            } catch (DataAccessException e) {
+                throw new UnavailableDatesException();
+            }
+        } else {
+            throw new UnavailableDatesException();
+        }
+    }
+
+    @Override
+    public void deleteBooking(Long id) throws BookingNotFoundException {
+        if (bookingRepository.existsById(id)) {
+            bookingRepository.deleteById(id);
+        } else {
+            throw new BookingNotFoundException(id);
+        }
+    }
+
+    private void validateUpdate(Booking booking) throws BookingNotFoundException {
+        if (!bookingRepository.existsById(booking.getId())) {
+            throw new BookingNotFoundException(booking.getId());
         }
     }
 

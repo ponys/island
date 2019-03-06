@@ -43,16 +43,17 @@ public class BookingController {
     }
 
     @RequestMapping(value = "/{id}", method = PUT)
-    public String updateBooking(@PathVariable Long id) {
-        //TODO
-        throw new ResponseStatusException(NOT_IMPLEMENTED);
+    public BookingDTO updateBooking(@PathVariable Long id, @RequestBody @Valid final BookingDTO booking) throws UnavailableDatesException, BookingNotFoundException {
+        if (id != booking.getId()) {
+            throw new ResponseStatusException(BAD_REQUEST);
+        }
+        return bookingConverter.toBookingDTO(bookingService.updateBooking(bookingConverter.toBooking(booking)));
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
     @ResponseStatus(NO_CONTENT)
-    public void cancelBooking(@PathVariable Long id) {
-        //TODO
-        throw new ResponseStatusException(NOT_IMPLEMENTED);
+    public void deleteBooking(@PathVariable Long id) throws BookingNotFoundException {
+        bookingService.deleteBooking(id);
     }
 
     // Exception Handling

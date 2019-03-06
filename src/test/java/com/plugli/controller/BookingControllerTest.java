@@ -4,6 +4,7 @@ import com.plugli.TestUtils;
 import com.plugli.model.Booking;
 import com.plugli.model.dto.BookingDTO;
 import com.plugli.service.BookingService;
+import com.plugli.service.exception.BookingNotFoundException;
 import com.plugli.service.exception.InvalidBookingLengthException;
 import com.plugli.service.exception.InvalidBookingRangeException;
 import com.plugli.service.exception.UnavailableDatesException;
@@ -22,9 +23,10 @@ import java.util.Optional;
 import static com.plugli.TestUtils.asJsonString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.willThrow;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
@@ -120,6 +122,62 @@ public class BookingControllerTest {
         mockMvc.perform(post(BOOKING_PATH)
                 .content(asJsonString(booking)).contentType(APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    // UPDATE //
+
+    @Test
+    public void testUpdateBooking() throws Exception {
+        BookingDTO booking = TestUtils.createBookingDTO(LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(2));
+        booking.setId(1L);
+
+        given(bookingService.updateBooking(any(Booking.class))).willReturn(bookingConverter.toBooking(booking));
+
+        mockMvc.perform(put(BOOKING_PATH + "/" + 1L)
+                .content(asJsonString(booking)).contentType(APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testUpdateWrongIdBooking() throws Exception {
+        BookingDTO booking = TestUtils.createBookingDTO(LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(2));
+        booking.setId(1L);
+
+        mockMvc.perform(put(BOOKING_PATH + "/" + 3L)
+                .content(asJsonString(booking)).contentType(APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdateNonExistingBooking() throws Exception {
+        BookingDTO booking = TestUtils.createBookingDTO(LocalDate.now().plusDays(1),
+                LocalDate.now().plusDays(2));
+        booking.setId(1L);
+
+        given(bookingService.updateBooking(any(Booking.class))).willThrow(BookingNotFoundException.class);
+
+        mockMvc.perform(put(BOOKING_PATH + "/" + 1L)
+                .content(asJsonString(booking)).contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
+
+    // DELETE //
+    @Test
+    public void testDeleteBooking() throws Exception {
+        willDoNothing().given(bookingService).deleteBooking(1L);
+
+        mockMvc.perform(delete(BOOKING_PATH + "/" + 1L))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void testDeleteNonExistingBooking() throws Exception {
+        willThrow(BookingNotFoundException.class).given(bookingService).deleteBooking(1L);
+
+        mockMvc.perform(delete(BOOKING_PATH + "/" + 1L))
+                .andExpect(status().isNotFound());
     }
 
 }
