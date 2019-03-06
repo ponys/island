@@ -1,4 +1,4 @@
-package com.plugli.controller;
+package com.plugli.controller.error;
 
 import org.springframework.http.HttpStatus;
 

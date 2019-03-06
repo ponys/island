@@ -1,5 +1,6 @@
 package com.plugli.controller;
 
+import com.plugli.controller.error.ErrorResponse;
 import com.plugli.model.Booking;
 import com.plugli.model.dto.BookingDTO;
 import com.plugli.service.BookingService;
