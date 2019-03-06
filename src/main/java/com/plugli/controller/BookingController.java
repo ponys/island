@@ -1,14 +1,12 @@
 package com.plugli.controller;
 
-import com.plugli.model.Booking;
+import com.plugli.model.dto.BookingDTO;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_IMPLEMENTED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
@@ -17,14 +15,14 @@ public class BookingController {
 
 
     @RequestMapping(value = "/{id}", method = GET)
-    public Booking getBooking(@PathVariable Long id) {
+    public BookingDTO getBooking(@PathVariable Long id) {
         //TODO
         throw new ResponseStatusException(NOT_IMPLEMENTED);
     }
 
     @RequestMapping(method = POST)
     @ResponseStatus(CREATED)
-    public Booking createBooking(@RequestBody @Valid final Booking booking) {
+    public BookingDTO createBooking(@RequestBody @Valid final BookingDTO booking) {
         //TODO
         throw new ResponseStatusException(NOT_IMPLEMENTED);
     }
