@@ -1,21 +1,30 @@
 package com.plugli.model.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@ApiModel(value = "Booking", description = "A Booking representing a reservation on the campsite")
 public class BookingDTO {
 
+    @ApiModelProperty(notes = "Unique booking ID representing the reservation", readOnly = true)
     private long id;
 
+    @ApiModelProperty(notes = "Full name of the user that generates the reservation", required = true)
     @NotNull
     private  String name;
 
+    @ApiModelProperty(notes = "Email of the the user that generates the reservation", required = true)
     @NotNull
     private  String email;
 
+    @ApiModelProperty(notes = "Intended arrival date of the reservation", required = true)
     @NotNull
     private LocalDate arrivalDate;
 
+    @ApiModelProperty(notes = "Intended departure date of the reservation", required = true)
     @NotNull
     private  LocalDate departureDate;
 
