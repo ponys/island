@@ -16,7 +16,7 @@ import java.util.stream.LongStream;
 public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Resource
-    BookingDateRepository bookingDateRepository;
+    private BookingDateRepository bookingDateRepository;
 
     @Override
     public List<LocalDate> getAvailability(LocalDate startDate, LocalDate endDate) {

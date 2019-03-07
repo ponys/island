@@ -18,7 +18,7 @@ import java.util.stream.LongStream;
 public class BookingConverter {
 
     @Resource
-    ModelMapper modelMapper;
+    private ModelMapper modelMapper;
 
     Booking toBooking(BookingDTO bookingDTO) {
         Booking booking = modelMapper.map(bookingDTO, Booking.class);
@@ -31,6 +31,7 @@ public class BookingConverter {
 
     BookingDTO toBookingDTO(Booking booking) {
         BookingDTO bookingDTO = modelMapper.map(booking, BookingDTO.class);
+        // Safe usage of optional.get(), bookingDates cannot be empty
         LocalDate arrivalDate = booking.getBookingDates().stream().map(BookingDate::getDate).min(Comparator.naturalOrder()).get();
         LocalDate departureDate = arrivalDate.plusDays(booking.getBookingDates().size());
         bookingDTO.setArrivalDate(arrivalDate);

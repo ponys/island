@@ -22,10 +22,10 @@ import static com.plugli.CampsiteConfiguration.*;
 public class BookingServiceImpl implements BookingService {
 
     @Resource
-    AvailabilityService availabilityService;
+    private AvailabilityService availabilityService;
 
     @Resource
-    BookingRepository bookingRepository;
+    private BookingRepository bookingRepository;
 
     @Override
     public Optional<Booking> getBookingById(Long id) {

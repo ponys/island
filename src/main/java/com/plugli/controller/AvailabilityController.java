@@ -21,7 +21,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class AvailabilityController {
 
     @Resource
-    AvailabilityService availabilityService;
+    private AvailabilityService availabilityService;
 
     @ApiOperation(value = "Get availability of the campsite for a given date range", response = String.class, responseContainer = "List")
     @RequestMapping(method = GET)
