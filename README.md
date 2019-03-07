@@ -14,7 +14,7 @@ The project can either be run locally or using docker
 ````
 ./run_docker.sh
 ````
-Tt will build the project, generate an image from the source and deploy into the swarm with a postgres image.                    
+It will build the project, generate an image from the source and deploy into the swarm with a postgres image.                    
 - Once completed open a browser and navigate to (http://${docker_vm_ip}:8080/swagger-ui.html) for a list of API 
 documentation
 
