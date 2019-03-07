@@ -1,0 +1,22 @@
+version: '3'
+services:
+  island-app:
+    image: island-app:1.0
+    ports:
+    - "8080:8080"
+    networks:
+    - webnet
+    depends_on:
+    - postgresdb
+  postgresdb:
+    image: postgres:9.4.21-alpine
+    environment:
+      POSTGRES_USER: island
+      POSTGRES_PASSWORD: island123
+    networks:
+    - webnet
+    ports:
+    - "5432:5432"
+
+networks:
+  webnet:
