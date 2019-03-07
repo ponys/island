@@ -51,7 +51,8 @@ Appropriated functional test cases are provided for concurrency at com.plugli.fu
 Availability for a desired range is a simple calculation, that only require a set of reads against the DB, to lookup for 
 reserved dates in the range.
 
-#Back-end Tech Challenge Exercise
+# Back-end Tech Challenge Exercise
+
 An underwater volcano formed a new small island in the Pacific Ocean last month. All the conditions on the island seems perfect and it was
 decided to open it up for the general public to experience the pristine uncharted territory.
 The island is big enough to host a single campsite so everybody is very excited to visit. In order to regulate the number of people on the island, it
