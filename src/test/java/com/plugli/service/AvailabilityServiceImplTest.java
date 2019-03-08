@@ -10,12 +10,13 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,7 +33,8 @@ public class AvailabilityServiceImplTest {
         LocalDate start = LocalDate.now().plusDays(1);
         LocalDate endDate = start.plusDays(5);
 
-        given(bookingDateRepository.existsByDate(start.plusDays(2))).willReturn(true);
+        given(bookingDateRepository.findAllBetween(start, endDate)).willReturn(Collections.singletonList(
+                new BookingDate(start.plusDays(2))));
 
         List<LocalDate> rList = availabilityService.getAvailability(start, endDate);
         assertThat(rList.size(), is(4));
@@ -42,8 +44,14 @@ public class AvailabilityServiceImplTest {
     @Test
     public void testNoAvailability() {
         LocalDate start = LocalDate.now().plusDays(1);
-        LocalDate endDate = start.plusDays(5);
-        given(bookingDateRepository.existsByDate(any(LocalDate.class))).willReturn(true);
+        LocalDate endDate = LocalDate.now().plusDays(6);
+        given(bookingDateRepository.findAllBetween(start, endDate)).willReturn(Arrays.asList(
+                new BookingDate(LocalDate.now().plusDays(1)),
+                new BookingDate(LocalDate.now().plusDays(2)),
+                new BookingDate(LocalDate.now().plusDays(3)),
+                new BookingDate(LocalDate.now().plusDays(4)),
+                new BookingDate(LocalDate.now().plusDays(5))
+        ));
 
         List<LocalDate> rList = availabilityService.getAvailability(start, endDate);
         assertThat(rList, is(empty()));

@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
@@ -20,9 +21,12 @@ public class AvailabilityServiceImpl implements AvailabilityService {
 
     @Override
     public List<LocalDate> getAvailability(LocalDate startDate, LocalDate endDate) {
+        Set<LocalDate> bookingDates = bookingDateRepository.findAllBetween(startDate, endDate)
+                .stream().map(BookingDate::getDate).collect(Collectors.toSet());
+
         return LongStream.range(startDate.toEpochDay(), endDate.toEpochDay())
                 .mapToObj(LocalDate::ofEpochDay)
-                .filter(day -> !bookingDateRepository.existsByDate(day))
+                .filter(day -> !bookingDates.contains(day))
                 .collect(Collectors.toList());
     }
 
